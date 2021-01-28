@@ -30,9 +30,13 @@ class Game {
     }
 
     car1 = createSprite(100,200);
+    car1.addImage("Car1",car1Img);
     car2 = createSprite(300,200);
+    car2.addImage("Car2",car2Img);
     car3 = createSprite(500,200);
+    car3.addImage("Car3",car3Img);
     car4 = createSprite(700,200);
+    car4.addImage("Car4",car4Img);
     cars = [car1, car2, car3, car4];
   }
 
@@ -40,15 +44,17 @@ class Game {
     form.hide();
 
     Player.getPlayerInfo();
+    player.getCarsAtEnd();
     
     if(allPlayers !== undefined){
       //var display_position = 100;
-      
+      background(ground);
+      image(track, 0,-displayHeight*4,displayWidth,displayHeight*5);
       //index of the array
       var index = 0;
 
       //x and y position of the cars
-      var x = 0;
+      var x = 175;
       var y;
 
       for(var plr in allPlayers){
@@ -63,6 +69,8 @@ class Game {
         cars[index-1].y = y;
 
         if (index === player.index){
+          fill("red");
+          ellipse(x,y,60,60);
           cars[index - 1].shapeColor = "red";
           camera.position.x = displayWidth/2;
           camera.position.y = cars[index-1].y
@@ -79,6 +87,22 @@ class Game {
       player.update();
     }
 
+    if(player.distance > 3500){
+        gameState=2;
+        player.rank+=1;
+        Player.updateCarsAtEnd(player.rank);
+        player.update();
+        swal({
+          title: `Awesome!${"\n"}Rank${"\n"}${player.rank}`,
+          text: "You Reached The Finish Line Successfully",
+          icon: "images/Cup.png",
+          confirmationButtonText: "ok!",
+        });
+    }
     drawSprites();
+  }
+  end(){
+    console.log("GameOver");
+    console.log(player.rank);
   }
 }
